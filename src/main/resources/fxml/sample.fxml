@@ -1,18 +1,18 @@
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 
 
-<GridPane fx:controller="com.bsk.SecureFileTransferApplication"
-          xmlns:fx="http://javafx.com/fxml" alignment="center"
-          hgap="10" vgap="10">
-    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
-    <columnConstraints>
-        <ColumnConstraints minWidth="100" prefWidth="100"
-                           maxWidth="Infinity" halignment="RIGHT">
-        </ColumnConstraints>
-        <ColumnConstraints minWidth="200" prefWidth="200"
-                           maxWidth="Infinity" hgrow="ALWAYS">
-        </ColumnConstraints>
-    </columnConstraints>
-</GridPane>
+<VBox fx:id="vbox" layoutX="10.0" layoutY="10.0" prefHeight="250.0" prefWidth="300.0" spacing="10"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.bsk.Controllers.FileChooserController">
+    <style>
+        -fx-padding: 10;
+        -fx-border-style: solid inside;
+        -fx-border-width: 2;
+        -fx-border-insets: 5;
+        -fx-border-radius: 5;
+        -fx-border-color: blue;
+    </style>
+    <Button fx:id="fileChooser" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false"
+            onAction="#chooseFile" text="Choose file" textAlignment="CENTER"/>
+</VBox>

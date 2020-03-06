@@ -24,6 +24,7 @@ public class SecureFileTransferApplication extends Application {
 
     public void start(Stage primaryStage) throws Exception {
         fxmlLoader.setLocation(getClass().getResource("/fxml/sample.fxml"));
+
         Parent rootNode = fxmlLoader.load();
 
         primaryStage.setTitle("Hello world");
