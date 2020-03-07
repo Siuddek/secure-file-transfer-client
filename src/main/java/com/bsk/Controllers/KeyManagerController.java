@@ -1,12 +1,32 @@
 package com.bsk.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import org.springframework.stereotype.Component;
 
 @Component
 public class KeyManagerController {
     @FXML
+    private Button sendPasswordButton;
+    @FXML
     private PasswordField passwordBox;
+    private final int MINIMAL_PASSWORD_LENGTH = 8;
+
+    public void generateKeys(ActionEvent actionEvent) {
+        String password = passwordBox.getText();
+        if (password.length() < MINIMAL_PASSWORD_LENGTH){
+            showShortPasswordError();
+        }
+    }
+
+    private void showShortPasswordError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Password Error");
+        alert.setHeaderText("Password is too short");
+        alert.setContentText("Password has to have at least 8 characters");
+        alert.showAndWait();
+    }
 }
