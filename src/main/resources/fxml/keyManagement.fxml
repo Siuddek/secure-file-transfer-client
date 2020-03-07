@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.bsk.Controllers.KeyManagerController"
+            prefHeight="400.0" prefWidth="600.0">
+    <Pane>
+        <Label text="Enter password to generate and encrypt RSA keys:" layoutY="100" prefWidth="375.0"/>
+        <PasswordField fx:id="passwordBox" layoutY="125" prefWidth="375.0"/>
+    </Pane>
+</AnchorPane>

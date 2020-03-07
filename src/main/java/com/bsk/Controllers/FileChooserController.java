@@ -15,9 +15,9 @@ public class FileChooserController {
     @FXML
     public Button fileChooser;
 
-    public void chooseFile(ActionEvent actionEvent) {
+    public void chooseAndEncryptFile(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
-        File file = chooser.showOpenDialog(new Stage());
+        File fileToEncrypt = chooser.showOpenDialog(new Stage());
     }
 }

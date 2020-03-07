@@ -30,7 +30,7 @@ public class RadioButtonsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setToggleGroup();
-        blockCipherState.setCurrentBlockCipherState(BlockCipherTypes.valueOf(ECBRadio.getText()));
+        setDefaultRadioButton();
         addListenerToRadioButtons();
     }
 
@@ -40,6 +40,10 @@ public class RadioButtonsController implements Initializable {
         CBCRadio.setToggleGroup(toggleGroup);
         CFBRadio.setToggleGroup(toggleGroup);
         OFBRadio.setToggleGroup(toggleGroup);
+    }
+
+    private void setDefaultRadioButton() {
+        blockCipherState.setCurrentBlockCipherState(BlockCipherTypes.valueOf(ECBRadio.getText()));
     }
 
     private void addListenerToRadioButtons() {
