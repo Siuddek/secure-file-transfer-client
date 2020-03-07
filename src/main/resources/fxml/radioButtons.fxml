@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bsk.Controllers.RadioButtonsController" >
+    <VBox prefHeight="280.0" prefWidth="125.0">
+        <RadioButton text="ECB" selected="true" fx:id="ECBRadio">
+            <toggleGroup>
+                <ToggleGroup fx:id="defaultGroup"/>
+            </toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="CBCRadio" mnemonicParsing="false" text="CBC" toggleGroup="$defaultGroup"/>
+        <RadioButton fx:id="CFBRadio" mnemonicParsing="false" text="CFB" toggleGroup="$defaultGroup"/>
+        <RadioButton fx:id="OFBRadio" mnemonicParsing="false" text="OFB" toggleGroup="$defaultGroup"/>
+    </VBox>
+</AnchorPane>

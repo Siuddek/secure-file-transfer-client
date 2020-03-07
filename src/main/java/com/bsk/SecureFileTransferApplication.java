@@ -15,6 +15,10 @@ public class SecureFileTransferApplication extends Application {
     private ConfigurableApplicationContext springContext;
     private FXMLLoader fxmlLoader;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void init() throws Exception {
         springContext = SpringApplication.run(SecureFileTransferApplication.class);
@@ -24,9 +28,11 @@ public class SecureFileTransferApplication extends Application {
 
     public void start(Stage primaryStage) throws Exception {
         fxmlLoader.setLocation(getClass().getResource("/fxml/sample.fxml"));
-
         Parent rootNode = fxmlLoader.load();
+        setDefaultStage(primaryStage, rootNode);
+    }
 
+    private void setDefaultStage(Stage primaryStage, Parent rootNode) {
         primaryStage.setTitle("Hello world");
         Scene scene = new Scene(rootNode, 800, 600);
         primaryStage.setScene(scene);
@@ -36,9 +42,5 @@ public class SecureFileTransferApplication extends Application {
     @Override
     public void stop() {
         springContext.stop();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
