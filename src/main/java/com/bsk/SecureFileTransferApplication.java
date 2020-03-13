@@ -20,7 +20,7 @@ public class SecureFileTransferApplication extends Application {
     }
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         springContext = SpringApplication.run(SecureFileTransferApplication.class);
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(springContext::getBean);
@@ -33,7 +33,7 @@ public class SecureFileTransferApplication extends Application {
     }
 
     private void setDefaultStage(Stage primaryStage, Parent rootNode) {
-        primaryStage.setTitle("Hello world");
+        primaryStage.setTitle("Secure File Transfer");
         Scene scene = new Scene(rootNode, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
