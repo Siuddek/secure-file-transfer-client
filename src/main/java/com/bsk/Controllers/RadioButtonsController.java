@@ -24,22 +24,22 @@ public class RadioButtonsController implements Initializable {
     @FXML
     RadioButton OFBRadio;
     @FXML
-    ToggleGroup toggleGroup;
+    ToggleGroup defaultGroup;
     private final BlockCipherState blockCipherState;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setToggleGroup();
+        defaultGroup = new ToggleGroup();
+        setDefaultGroup();
         setDefaultRadioButton();
         addListenerToRadioButtons();
     }
 
-    private void setToggleGroup() {
-        toggleGroup = new ToggleGroup();
-        ECBRadio.setToggleGroup(toggleGroup);
-        CBCRadio.setToggleGroup(toggleGroup);
-        CFBRadio.setToggleGroup(toggleGroup);
-        OFBRadio.setToggleGroup(toggleGroup);
+    private void setDefaultGroup() {
+        ECBRadio.setToggleGroup(defaultGroup);
+        CBCRadio.setToggleGroup(defaultGroup);
+        CFBRadio.setToggleGroup(defaultGroup);
+        OFBRadio.setToggleGroup(defaultGroup);
     }
 
     private void setDefaultRadioButton() {
@@ -47,7 +47,7 @@ public class RadioButtonsController implements Initializable {
     }
 
     private void addListenerToRadioButtons() {
-        toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+        defaultGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             RadioButton clickedRadioButton = (RadioButton)newValue.getToggleGroup().getSelectedToggle();
             System.out.println(clickedRadioButton.getText());
             blockCipherState.setCurrentBlockCipherState(BlockCipherTypes.valueOf(clickedRadioButton.getText()));

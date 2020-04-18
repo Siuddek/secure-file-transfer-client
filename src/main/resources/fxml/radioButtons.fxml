@@ -9,7 +9,7 @@
                 <ToggleGroup fx:id="defaultGroup"/>
             </toggleGroup>
         </RadioButton>
-        <RadioButton fx:id="CBCRadio" mnemonicParsing="false" text="CBC" toggleGroup="$defaultGroup"/>
+        <RadioButton fx:id="CBCRadio" mnemonicParsing="false" text="CBC" toggleGroup="$defaultGroup" />
         <RadioButton fx:id="CFBRadio" mnemonicParsing="false" text="CFB" toggleGroup="$defaultGroup"/>
         <RadioButton fx:id="OFBRadio" mnemonicParsing="false" text="OFB" toggleGroup="$defaultGroup"/>
     </VBox>

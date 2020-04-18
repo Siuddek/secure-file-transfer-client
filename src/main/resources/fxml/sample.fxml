@@ -13,11 +13,13 @@
         <HBox>
             <fx:include source="fileChooser.fxml"/>
         </HBox>
-        <HBox>
-            <fx:include source="radioButtons.fxml"/>
-        </HBox>
+
         <HBox>
             <fx:include source="keyManagement.fxml"/>
+        </HBox>
+
+        <HBox>
+            <fx:include source="radioButtons.fxml"/>
         </HBox>
 
     </children>
