@@ -1,54 +1,46 @@
 package com.bsk.Services;
 
+import com.bsk.Configurations.KeyManagerConfiguration;
 import com.google.common.hash.Hashing;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 @Service
+@RequiredArgsConstructor
 public class KeyManagerService {
-    @Value("${rsa.path.publicKeyFolder}")
-    private String publicKeyPath;
-    @Value("${rsa.path.privateKeyFolder}")
-    private String privateKeyPath;
+
+    private final KeyManagerConfiguration configuration;
 
     public void createRsaKeyPair(String password) throws NoSuchAlgorithmException {
-        final String passwordHash = getEncryptedPassword(password);
+        final String passwordHash = getEncryptedPassword(password); //TODO encode key files with user password
         KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-        keyGenerator.initialize(512);
+        keyGenerator.initialize(configuration.getKeyLength());
         KeyPair keyPair = keyGenerator.generateKeyPair();
-        byte[] rawPublicKey = keyPair.getPublic().getEncoded();
-        byte[] rawPrivateKey = keyPair.getPrivate().getEncoded();
-
-        StringBuffer publicKey = bin2hex(rawPublicKey);
-        StringBuffer privateKey = bin2hex(rawPrivateKey);
+        Key publicKey = keyPair.getPublic();
+        Key privateKey = keyPair.getPrivate();
 
         try {
-            saveKeyToFile(publicKeyPath, publicKey);
-            saveKeyToFile(privateKeyPath, privateKey);
+            saveKeyToFile(configuration.getPublicKeyFolderPath(), publicKey, configuration.getPublicKeyCommentBegin(), configuration.getPublicKeyCommentEnd());
+            saveKeyToFile(configuration.getPrivateKeyFolderPath(), privateKey, configuration.getPrivateKeyCommentBegin(), configuration.getPrivateKeyCommentEnd());
         } catch (IOException e) {
-            e.printStackTrace(); //TODO handle by error
+            e.printStackTrace(); //TODO handling
         }
     }
 
-    private StringBuffer bin2hex(byte[] key) {
-        StringBuffer stringKey = new StringBuffer();
-        for (byte b : key) {
-            stringKey.append(Integer.toHexString(0x0100 + (b & 0x00FF)).substring(1));
-        }
-        return stringKey;
-    }
-
-    private void saveKeyToFile(String path, StringBuffer key) throws IOException {
-        File publicKeyFile = new File(path);
-        publicKeyFile.createNewFile();
-        var out = new FileOutputStream(path);
-        out.write(key.toString().getBytes());
+    private void saveKeyToFile(String path, Key key, String beginComment, String endComment) throws IOException {
+        Base64.Encoder encoder = Base64.getEncoder();
+        Writer out = new FileWriter(path);
+        out.write(beginComment);
+        out.write(encoder.encodeToString(key.getEncoded()));
+        out.write(endComment);
         out.close();
     }
 
