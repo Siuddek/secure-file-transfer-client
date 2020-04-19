@@ -17,7 +17,7 @@ public class KeyExchangeController {
     private final KeyManagerConfiguration configuration;
 
     @GetMapping("publicKey")
-    public String getPublicKey() {  //TODO decrypt file
+    public String getPublicKey() {  //TODO decrypt RSA public key file
         try {
             return new String(Files.readAllBytes(Paths.get(configuration.getPublicKeyFolderPath())));
         } catch (IOException e) {
