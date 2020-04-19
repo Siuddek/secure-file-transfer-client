@@ -60,9 +60,9 @@ public class KeyManagerService {
     private void saveKeyToFile(String path, Key key, String beginComment, String endComment) throws IOException {
         Base64.Encoder encoder = Base64.getEncoder();
         Writer out = new FileWriter(path);
-        out.write(beginComment);
+        //out.write(beginComment); //TODO find out if commends are necessary
         out.write(encoder.encodeToString(key.getEncoded()));
-        out.write(endComment);
+        //out.write(endComment);
         out.close();
     }
 
