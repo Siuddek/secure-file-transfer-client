@@ -6,11 +6,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 
 @Component
@@ -26,8 +32,8 @@ public class FileChooserController {
         chooser.setTitle("Open File");
         File fileToEncrypt = chooser.showOpenDialog(new Stage());
         try {
-            fileEncryptService.encryptFile(fileToEncrypt);
-        } catch (IOException e) {
+            Pair encryptedFileAndSessionKey = fileEncryptService.encryptFile(fileToEncrypt); //TODO !IMPORTANT send session key and file
+        } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException e) {
             e.printStackTrace(); //TODO handling
         }
     }

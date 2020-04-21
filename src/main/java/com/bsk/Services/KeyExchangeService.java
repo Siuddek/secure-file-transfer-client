@@ -16,4 +16,8 @@ public class KeyExchangeService {
     public String getPublicKey() { //TODO decide if use url as class filed or parameter
         return restTemplate.getForEntity(receiverUrl, String.class).getBody();
     }
+
+    public void sendEncryptedFileAndSessionKey() {
+
+    }
 }
