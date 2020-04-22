@@ -13,8 +13,8 @@
 
     <ToolBar prefHeight="80.0" prefWidth="800">
         <Pane HBox.hgrow="ALWAYS"/>
-        <Button fx:id="fileChooser" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false"
-                onAction="#chooseAndEncryptFile" text="Choose and encrypt file" textAlignment="CENTER" StackPane.alignment="TOP_RIGHT"/>
+        <Button fx:id="fileChooser" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                onAction="#chooseAndEncryptFile" text="Send encrypted file" textAlignment="CENTER" StackPane.alignment="TOP_CENTER"/>
     </ToolBar>
 
 </AnchorPane>

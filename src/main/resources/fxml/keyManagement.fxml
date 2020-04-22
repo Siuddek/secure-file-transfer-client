@@ -8,8 +8,8 @@
             fx:controller="com.bsk.Controllers.KeyManagerController"
             prefHeight="400.0" prefWidth="600.0">
     <Pane>
-        <Label text="Enter password to generate and encrypt RSA keys:" layoutY="100" prefWidth="375.0"/>
-        <PasswordField fx:id="passwordBox" layoutY="125" prefWidth="375.0"/>
-        <Button fx:id="sendPasswordButton" onAction="#generateKeys" contentDisplay="CENTER" mnemonicParsing="false" layoutX="400" layoutY="125" text="Generate RSA keys"/>
+        <Label text="Enter password to generate and encrypt RSA keys:" layoutY="100.0" layoutX="400.0"/>
+        <PasswordField fx:id="passwordBox" layoutY="125.0" layoutX="530.0" prefWidth="150.0"/>
+        <Button fx:id="sendPasswordButton" onAction="#generateKeys" contentDisplay="CENTER" mnemonicParsing="false" layoutX="400.0" layoutY="125.0" text="Generate RSA keys"/>
     </Pane>
 </AnchorPane>

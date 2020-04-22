@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bsk.Controllers.RadioButtonsController" >
-    <VBox prefHeight="280.0" prefWidth="125.0">
+    <VBox layoutX="5.0" layoutY="5.0">
         <RadioButton text="ECB" selected="true" fx:id="ECBRadio">
             <toggleGroup>
                 <ToggleGroup fx:id="defaultGroup"/>
