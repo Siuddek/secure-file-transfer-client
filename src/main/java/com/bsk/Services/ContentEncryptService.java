@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,18 +16,17 @@ import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
-public class FileEncryptService {
+public class ContentEncryptService {
 
     private final KeyExchangeService keyExchangeService;
     private final BlockCipherState blockCipherState;
 
-    public Pair<String, String> encryptFile(File fileToEncrypt) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        String fileToEncryptContent = new String(Files.readAllBytes(Paths.get(fileToEncrypt.getPath())));
+    public Pair<String, String> encrypt(String contentToEncrypt) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+
         String publicKey = keyExchangeService.getPublicKey();
         SecretKey sessionKey = getSessionKey();
         String encryptedSessionKey = getEncryptedSessionKey(publicKey, sessionKey);
-        String encryptedFile = getEncryptedFile(fileToEncryptContent, sessionKey);
-
+        String encryptedFile = getEncryptedFile(contentToEncrypt, sessionKey);
         return new Pair<>(encryptedSessionKey, encryptedFile);
     }
 

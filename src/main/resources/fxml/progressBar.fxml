@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.bsk.Controllers.MainController"
+            fx:controller="com.bsk.Controllers.FileChooserController"
             prefHeight="400.0" prefWidth="600.0">
     <Label text="Progress:" layoutY="105.0" layoutX="15.0"/>
 

@@ -31,6 +31,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter")
     compile("com.google.guava:guava:23+")
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.integration:spring-integration-core")
+    compile("org.springframework.integration:spring-integration-ip")
 }
 
 javafx {

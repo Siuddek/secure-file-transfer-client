@@ -1,9 +1,12 @@
 package com.bsk.Controllers;
 
-import com.bsk.Services.FileEncryptService;
+import com.bsk.Services.ContentEncryptService;
+import com.bsk.Services.TcpMessageService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -15,8 +18,12 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Component
@@ -25,16 +32,23 @@ public class FileChooserController {
 
     @FXML
     public Button fileChooser;
-    private final FileEncryptService fileEncryptService;
+    @FXML
+    private ProgressBar progressBar;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    private final ContentEncryptService contentEncryptService;
 
     public void chooseAndEncryptFile(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         File fileToEncrypt = chooser.showOpenDialog(new Stage());
         try {
-            Pair encryptedFileAndSessionKey = fileEncryptService.encryptFile(fileToEncrypt); //TODO !IMPORTANT send session key and file
+            Pair<String, String> encryptedFileAndSessionKey = contentEncryptService.encrypt(new String(Files.readAllBytes(Paths.get(fileToEncrypt.getPath()))));
+            Task<Void> sendFileTask = new TcpMessageService(encryptedFileAndSessionKey);
+            progressBar.progressProperty().bind(sendFileTask.progressProperty());
+            executor.submit(sendFileTask);
         } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException e) {
-            e.printStackTrace(); //TODO handling
+            e.printStackTrace();
         }
     }
 }
