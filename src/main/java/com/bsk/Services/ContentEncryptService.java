@@ -44,7 +44,7 @@ public class ContentEncryptService {
 
 
     private String getEncryptedSessionKey(String publicKey, SecretKey sessionKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding"); //TODO move to properties / constant ?
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, createPublicKeyFromString(publicKey));
         return Base64.getEncoder().encodeToString(cipher.doFinal(sessionKey.getEncoded()));
     }

@@ -1,8 +1,6 @@
 package com.bsk.Controllers;
 
 import com.bsk.Services.ContentEncryptService;
-import com.bsk.Services.TcpMessageService;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -34,8 +32,6 @@ public class FileChooserController {
     public Button fileChooser;
     @FXML
     private ProgressBar progressBar;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
     private final ContentEncryptService contentEncryptService;
 
     public void chooseAndEncryptFile(ActionEvent actionEvent) {
@@ -44,9 +40,6 @@ public class FileChooserController {
         File fileToEncrypt = chooser.showOpenDialog(new Stage());
         try {
             Pair<String, String> encryptedFileAndSessionKey = contentEncryptService.encrypt(new String(Files.readAllBytes(Paths.get(fileToEncrypt.getPath()))));
-            Task<Void> sendFileTask = new TcpMessageService(encryptedFileAndSessionKey);
-            progressBar.progressProperty().bind(sendFileTask.progressProperty());
-            executor.submit(sendFileTask);
         } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
