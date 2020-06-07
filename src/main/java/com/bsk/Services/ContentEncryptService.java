@@ -40,7 +40,7 @@ public class ContentEncryptService {
     }
 
     private byte[] getEncryptedSessionKey(byte[] publicKey, SecretKey sessionKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException {
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
         X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, keyFactory.generatePublic(spec));
@@ -53,35 +53,13 @@ public class ContentEncryptService {
         return cipher.doFinal(fileToEncryptContent.getBytes());
     }
 
-    private PublicKey createPublicKeyFromString(String base64PublicKey) {
-        try {
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes()));
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePublic(keySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public byte[] decryptSessionKey(byte[] encryptedContent) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
         byte[] keyBytes = Files.readAllBytes(Paths.get(configuration.getPrivateKeyFolderPath()));
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PrivateKey privateKey = keyFactory.generatePrivate(spec);
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         return cipher.doFinal(encryptedContent);
-    }
-
-    private PrivateKey createPrivateKeyFromString(String base64PrivateKey) {
-        try {
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes()));
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePrivate(keySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

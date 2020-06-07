@@ -23,7 +23,7 @@ public class KeyExchangeService {
     }
 
     public void sendEncryptedFileAndSessionKey(EncryptedContentPackage encryptedContentPackage) {
-        restTemplate.postForEntity(receiverSessionKeyUrl, encryptedContentPackage.getEncryptedContent(), String.class);
+        restTemplate.postForEntity(receiverSessionKeyUrl, encryptedContentPackage.getEncryptedSessionKey(), String.class);
         restTemplate.postForEntity(receiverEncryptedContentUrl, encryptedContentPackage.getEncryptedContent(), String.class);
     }
 }

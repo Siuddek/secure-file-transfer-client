@@ -51,8 +51,6 @@ public class KeyExchangeController {
         encryptedContentPackage.setEncryptedSessionKey(sessionKey);
         try {
             byte[] decoded = contentEncryptService.decryptSessionKey(sessionKey);
-            System.out.println("DECODEDEDEDD");
-            System.out.println(Arrays.toString(decoded));
         } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
@@ -62,6 +60,7 @@ public class KeyExchangeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void saveEncryptedContent(@RequestBody @Valid byte[] encryptedContent) {
         System.out.println(encryptedContent);
+        System.out.println("jebac dissa kurwe zwisa xdxd");
         encryptedContentPackage.setEncryptedContent(encryptedContent);
     }
 

@@ -24,7 +24,7 @@ public class TestRSA {
     @Test
     public void testPadding() throws Exception {
         KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-        keyGenerator.initialize(1024);
+        keyGenerator.initialize(2048);
         KeyPair keyPair = keyGenerator.generateKeyPair();
         PublicKey publicKey = keyPair.getPublic();
 
@@ -60,6 +60,8 @@ public class TestRSA {
 
         byte[] encryptedSessionKey = getEncryptedSessionKey(publicKey.getEncoded(), sessionKey);
         byte[] decryptedSessionKey = decryptSessionKey(encryptedSessionKey);
+
+        System.out.println(Arrays.equals(sessionKey.getEncoded(), decryptedSessionKey));
     }
 
     private SecretKey getSessionKey() throws NoSuchAlgorithmException {
