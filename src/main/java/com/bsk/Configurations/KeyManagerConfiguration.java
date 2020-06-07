@@ -12,10 +12,7 @@ public class KeyManagerConfiguration {
 
     private String publicKeyFolderPath;
     private String privateKeyFolderPath;
-    private String privateKeyCommentBegin;
-    private String privateKeyCommentEnd;
-    private String publicKeyCommentBegin;
-    private String publicKeyCommentEnd;
+    private String passwordFolderPath;
     private int keyLength;
 
 }

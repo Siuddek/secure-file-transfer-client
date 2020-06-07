@@ -16,10 +16,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -51,7 +48,7 @@ public class KeyExchangeController {
     public void saveSessionKey(@RequestBody @Valid byte[] sessionKey) {
         try {
             decryptedSessionKey = contentEncryptService.decryptSessionKey(sessionKey);
-        } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidKeySpecException e) {
+        } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidKeySpecException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
     }
@@ -60,6 +57,8 @@ public class KeyExchangeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void saveEncryptedContent(@RequestBody @Valid EncryptedContentPackage encryptedContentPackage) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         String decrypted = contentEncryptService.decryptFile(decryptedSessionKey, encryptedContentPackage);
+        System.out.println("got it!");
+        System.out.println(decrypted);
         if (encryptedContentPackage.getType().equals("text")) {
             readArea.setText(decrypted);
         }

@@ -25,6 +25,7 @@ public class ContentEncryptService {
     private final KeyExchangeService keyExchangeService;
     private final BlockCipherState blockCipherState;
     private final KeyManagerConfiguration configuration;
+    private final KeyManagerService keyManagerService;
 
     public EncryptedContentPackage encrypt(String contentToEncrypt) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
         byte[] publicKey = keyExchangeService.getPublicKey();
@@ -54,8 +55,8 @@ public class ContentEncryptService {
         return cipher.doFinal(fileToEncryptContent.getBytes());
     }
 
-    public byte[] decryptSessionKey(byte[] encryptedContent) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(configuration.getPrivateKeyFolderPath()));
+    public byte[] decryptSessionKey(byte[] encryptedContent) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeySpecException, InvalidAlgorithmParameterException {
+        byte[] keyBytes = keyManagerService.loadEncryptedPrivateKey();
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PrivateKey privateKey = keyFactory.generatePrivate(spec);

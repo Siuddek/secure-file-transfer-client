@@ -6,23 +6,32 @@ import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.*;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 
 @Service
 @RequiredArgsConstructor
 public class KeyManagerService {
 
     private final KeyManagerConfiguration configuration;
+    private static final byte[] salt = {
+            (byte) 0x43, (byte) 0x76, (byte) 0x95, (byte) 0xc7,
+            (byte) 0x5b, (byte) 0xd7, (byte) 0x45, (byte) 0x17
+    };
 
-    public void createRsaKeyPair(String password) throws NoSuchAlgorithmException {
-        final String passwordHash = getEncryptedPassword(password); //TODO encode key files with user password
+    public void createRsaKeyPair(String password) throws NoSuchAlgorithmException, IOException {
+        String pass = getEncryptedPassword(password); //TODO encode key files with user password
+        savePassword(pass);
         KeyPair keyPair = generateKeyPair();
         Key publicKey = keyPair.getPublic();
         Key privateKey = keyPair.getPrivate();
@@ -30,11 +39,53 @@ public class KeyManagerService {
         try {
             deletePreviousKeys();
             saveKeyToFile(configuration.getPublicKeyFolderPath(), publicKey);
-            saveKeyToFile(configuration.getPrivateKeyFolderPath(), privateKey);
-        } catch (IOException e) {
+            saveEncryptedPrivateKey(privateKey);
+            showSuccessDialog();
+        } catch (Exception e) {
             e.printStackTrace(); //TODO handling
         }
-        showSuccessDialog();
+    }
+
+    private void savePassword(String password) throws IOException {
+        FileOutputStream out = new FileOutputStream(configuration.getPasswordFolderPath());
+        out.write(password.getBytes());
+        out.close();
+    }
+
+    private char[] loadPassword() throws IOException {
+        return new String(Files.readAllBytes(Paths.get(configuration.getPasswordFolderPath()))).toCharArray();
+    }
+
+    private void saveEncryptedPrivateKey(Key privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException, InvalidKeySpecException, InvalidAlgorithmParameterException {
+        PBEKeySpec keySpec = new PBEKeySpec(loadPassword());
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(keySpec);
+        PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, 42);
+        Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+        cipher.init(Cipher.ENCRYPT_MODE, key, pbeParamSpec);
+        byte[] encryptedPrivateKey = cipher.doFinal(privateKey.getEncoded());
+
+        FileOutputStream out = new FileOutputStream(configuration.getPrivateKeyFolderPath());
+        out.write(encryptedPrivateKey);
+        out.close();
+    }
+
+    public byte[] loadEncryptedPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        File privateKeyFile = new File(configuration.getPrivateKeyFolderPath());
+
+        PBEKeySpec keySpec = new PBEKeySpec(loadPassword());
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(keySpec);
+        PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, 42);
+        Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+        cipher.init(Cipher.DECRYPT_MODE, key, pbeParamSpec);
+
+        FileInputStream inputStream = new FileInputStream(privateKeyFile);
+        byte[] encryptedKey = new byte[(int)privateKeyFile.length()];
+        inputStream.read(encryptedKey);
+        inputStream.close();
+
+        return cipher.doFinal(encryptedKey);
     }
 
     private KeyPair generateKeyPair() throws NoSuchAlgorithmException {

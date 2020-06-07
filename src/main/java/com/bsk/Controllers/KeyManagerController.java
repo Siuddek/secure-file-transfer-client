@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 @Component
@@ -26,7 +28,7 @@ public class KeyManagerController {
         }
         try {
             keyManagerService.createRsaKeyPair(sendPasswordButton.getText());
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace(); //TODO handle by javafx alter
         }
 

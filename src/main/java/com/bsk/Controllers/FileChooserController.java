@@ -42,6 +42,7 @@ public class FileChooserController {
         File fileToEncrypt = chooser.showOpenDialog(new Stage());
         try {
             EncryptedContentPackage encryptedFileAndSessionKey = contentEncryptService.encrypt(new String(Files.readAllBytes(Paths.get(fileToEncrypt.getPath()))));
+            encryptedFileAndSessionKey.setType("file"); // TODO file extension
             keyExchangeService.sendEncryptedFileAndSessionKey(encryptedFileAndSessionKey);
         } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
