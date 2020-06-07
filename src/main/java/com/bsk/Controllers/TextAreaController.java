@@ -1,5 +1,6 @@
 package com.bsk.Controllers;
 
+import com.bsk.Models.EncryptedContentPackage;
 import com.bsk.Services.ContentEncryptService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,10 +34,10 @@ public class TextAreaController {
 
     public void encryptText(ActionEvent actionEvent) {
         try {
-            Pair<String, String> encryptedFileAndSessionKey = contentEncryptService.encrypt(textArea.getText());
+            EncryptedContentPackage encryptedFileAndSessionKey = contentEncryptService.encrypt(textArea.getText());
 //            Task<Void> sendFileTask = new TcpMessageService(encryptedFileAndSessionKey);
 //            executor.submit(sendFileTask);
-        } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException e) {
+        } catch (NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
     }

@@ -6,13 +6,14 @@ import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +29,18 @@ public class KeyManagerService {
 
         try {
             deletePreviousKeys();
-            saveKeyToFile(configuration.getPublicKeyFolderPath(), publicKey, configuration.getPublicKeyCommentBegin(), configuration.getPublicKeyCommentEnd());
-            saveKeyToFile(configuration.getPrivateKeyFolderPath(), privateKey, configuration.getPrivateKeyCommentBegin(), configuration.getPrivateKeyCommentEnd());
+            saveKeyToFile(configuration.getPublicKeyFolderPath(), publicKey);
+            saveKeyToFile(configuration.getPrivateKeyFolderPath(), privateKey);
         } catch (IOException e) {
             e.printStackTrace(); //TODO handling
         }
         showSuccessDialog();
+    }
+
+    private KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
+        keyGenerator.initialize(configuration.getKeyLength());
+        return keyGenerator.generateKeyPair();
     }
 
     private void showSuccessDialog() {
@@ -44,12 +51,6 @@ public class KeyManagerService {
         successDialog.showAndWait();
     }
 
-    private KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-        keyGenerator.initialize(configuration.getKeyLength());
-        return keyGenerator.generateKeyPair();
-    }
-
     private void deletePreviousKeys() {
         File privateKeyFile = new File(configuration.getPrivateKeyFolderPath());
         File publicKeyFile = new File(configuration.getPublicKeyFolderPath());
@@ -57,18 +58,16 @@ public class KeyManagerService {
         privateKeyFile.delete();
     }
 
-    private void saveKeyToFile(String path, Key key, String beginComment, String endComment) throws IOException {
-        Base64.Encoder encoder = Base64.getEncoder();
-        Writer out = new FileWriter(path);
-        //out.write(beginComment); //TODO find out if commends are necessary
-        out.write(encoder.encodeToString(key.getEncoded()));
-        //out.write(endComment);
+    private void saveKeyToFile(String path, Key key) throws IOException {
+        var out = new FileOutputStream(path);
+        out.write(key.getEncoded());
         out.close();
+        System.err.println("format: " + key.getFormat());
     }
 
     private String getEncryptedPassword(String password) {
         return Hashing.sha256()
-                      .hashString(password, StandardCharsets.UTF_8)
-                      .toString();
+                .hashString(password, StandardCharsets.UTF_8)
+                .toString();
     }
 }

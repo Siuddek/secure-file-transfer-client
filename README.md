@@ -1,2 +1,3 @@
 To run app use:
-./gradlew run
+./gradlew clean build
+docker build

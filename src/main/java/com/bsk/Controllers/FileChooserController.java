@@ -1,6 +1,8 @@
 package com.bsk.Controllers;
 
+import com.bsk.Models.EncryptedContentPackage;
 import com.bsk.Services.ContentEncryptService;
+import com.bsk.Services.KeyExchangeService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,8 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.security.spec.InvalidKeySpecException;
 
 
 @Component
@@ -33,14 +34,16 @@ public class FileChooserController {
     @FXML
     private ProgressBar progressBar;
     private final ContentEncryptService contentEncryptService;
+    private final KeyExchangeService keyExchangeService;
 
     public void chooseAndEncryptFile(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         File fileToEncrypt = chooser.showOpenDialog(new Stage());
         try {
-            Pair<String, String> encryptedFileAndSessionKey = contentEncryptService.encrypt(new String(Files.readAllBytes(Paths.get(fileToEncrypt.getPath()))));
-        } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException e) {
+            EncryptedContentPackage encryptedFileAndSessionKey = contentEncryptService.encrypt(new String(Files.readAllBytes(Paths.get(fileToEncrypt.getPath()))));
+            keyExchangeService.sendEncryptedFileAndSessionKey(encryptedFileAndSessionKey);
+        } catch (IOException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
     }
