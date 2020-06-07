@@ -28,8 +28,8 @@ import java.util.Arrays;
 public class KeyExchangeController {
 
     private final KeyManagerConfiguration configuration;
-    private final EncryptedContentPackage encryptedContentPackage;
     private final ContentEncryptService contentEncryptService;
+    private byte[] decryptedSessionKey;
 
     @GetMapping("/publicKey")
     public byte[] getPublicKey() {  //TODO decrypt RSA public key file
@@ -48,9 +48,8 @@ public class KeyExchangeController {
     @PostMapping("/sessionKey")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveSessionKey(@RequestBody @Valid byte[] sessionKey) {
-        encryptedContentPackage.setEncryptedSessionKey(sessionKey);
         try {
-            byte[] decoded = contentEncryptService.decryptSessionKey(sessionKey);
+            decryptedSessionKey = contentEncryptService.decryptSessionKey(sessionKey);
         } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
@@ -58,10 +57,9 @@ public class KeyExchangeController {
 
     @PostMapping("encryptedContent")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveEncryptedContent(@RequestBody @Valid byte[] encryptedContent) {
-        System.out.println(encryptedContent);
-        System.out.println("jebac dissa kurwe zwisa xdxd");
-        encryptedContentPackage.setEncryptedContent(encryptedContent);
+    public void saveEncryptedContent(@RequestBody @Valid byte[] encryptedContent) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+        String decrypted = contentEncryptService.decryptFile(decryptedSessionKey, encryptedContent);
+        System.out.println(decrypted);
     }
 
 }
