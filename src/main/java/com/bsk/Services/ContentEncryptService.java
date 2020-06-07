@@ -31,7 +31,7 @@ public class ContentEncryptService {
         SecretKey sessionKey = getSessionKey();
         byte[] encryptedSessionKey = getEncryptedSessionKey(publicKey, sessionKey);
         byte[] encryptedContent = getEncryptedContent(contentToEncrypt, sessionKey);
-        return new EncryptedContentPackage(encryptedSessionKey, encryptedContent);
+        return new EncryptedContentPackage(encryptedSessionKey, encryptedContent, blockCipherState.getCurrentBlockCipherState().toString());
     }
 
     private SecretKey getSessionKey() throws NoSuchAlgorithmException {
@@ -64,10 +64,10 @@ public class ContentEncryptService {
         return cipher.doFinal(encryptedContent);
     }
 
-    public String decryptFile(byte[] sessionKey, byte[] encryptedFile) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public String decryptFile(byte[] sessionKey, EncryptedContentPackage encryptedContentPackage) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         SecretKey key = new SecretKeySpec(sessionKey, 0, sessionKey.length, "AES");
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/" + encryptedContentPackage.getBlockMode() + "/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, key);
-        return new String(cipher.doFinal(encryptedFile));
+        return new String(cipher.doFinal(encryptedContentPackage.getEncryptedContent()));
     }
 }

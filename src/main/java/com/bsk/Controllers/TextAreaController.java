@@ -2,6 +2,7 @@ package com.bsk.Controllers;
 
 import com.bsk.Models.EncryptedContentPackage;
 import com.bsk.Services.ContentEncryptService;
+import com.bsk.Services.KeyExchangeService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,12 +32,13 @@ public class TextAreaController {
     public TextArea textArea;
 
     private final ContentEncryptService contentEncryptService;
+    private final KeyExchangeService keyExchangeService;
 
     public void encryptText(ActionEvent actionEvent) {
         try {
-            EncryptedContentPackage encryptedFileAndSessionKey = contentEncryptService.encrypt(textArea.getText());
-//            Task<Void> sendFileTask = new TcpMessageService(encryptedFileAndSessionKey);
-//            executor.submit(sendFileTask);
+            EncryptedContentPackage encryptedTextAndSessionKey = contentEncryptService.encrypt(textArea.getText());
+            encryptedTextAndSessionKey.setType("text");
+            keyExchangeService.sendEncryptedFileAndSessionKey(encryptedTextAndSessionKey);
         } catch (NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }

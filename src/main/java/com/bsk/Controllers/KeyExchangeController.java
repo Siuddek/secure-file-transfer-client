@@ -4,6 +4,7 @@ package com.bsk.Controllers;
 import com.bsk.Configurations.KeyManagerConfiguration;
 import com.bsk.Models.EncryptedContentPackage;
 import com.bsk.Services.ContentEncryptService;
+import javafx.scene.control.TextArea;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class KeyExchangeController {
 
     private final KeyManagerConfiguration configuration;
     private final ContentEncryptService contentEncryptService;
+    public TextArea readArea;
     private byte[] decryptedSessionKey;
 
     @GetMapping("/publicKey")
@@ -57,9 +58,11 @@ public class KeyExchangeController {
 
     @PostMapping("encryptedContent")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveEncryptedContent(@RequestBody @Valid byte[] encryptedContent) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        String decrypted = contentEncryptService.decryptFile(decryptedSessionKey, encryptedContent);
-        System.out.println(decrypted);
+    public void saveEncryptedContent(@RequestBody @Valid EncryptedContentPackage encryptedContentPackage) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+        String decrypted = contentEncryptService.decryptFile(decryptedSessionKey, encryptedContentPackage);
+        if (encryptedContentPackage.getType().equals("text")) {
+            readArea.setText(decrypted);
+        }
     }
 
 }
