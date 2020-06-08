@@ -15,4 +15,5 @@ public class KeyManagerConfiguration {
     private String passwordFolderPath;
     private int keyLength;
 
+    private String password;
 }

@@ -46,14 +46,12 @@ public class KeyManagerService {
         }
     }
 
-    private void savePassword(String password) throws IOException {
-        FileOutputStream out = new FileOutputStream(configuration.getPasswordFolderPath());
-        out.write(password.getBytes());
-        out.close();
+    private void savePassword(String password) {
+        configuration.setPassword(password);
     }
 
-    private char[] loadPassword() throws IOException {
-        return new String(Files.readAllBytes(Paths.get(configuration.getPasswordFolderPath()))).toCharArray();
+    private char[] loadPassword() {
+        return configuration.getPassword().toCharArray();
     }
 
     private void saveEncryptedPrivateKey(Key privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException, InvalidKeySpecException, InvalidAlgorithmParameterException {
