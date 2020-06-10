@@ -16,7 +16,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 
-public class TestRSA {
+public class TestMain {
 
     String publicKeyPath = "/home/siudek/College/secure-file-transfer-client/bsk/keys/publick/public.pub";
     String privateKeyPath = "/home/siudek/College/secure-file-transfer-client/bsk/keys/privatek/private.key";
