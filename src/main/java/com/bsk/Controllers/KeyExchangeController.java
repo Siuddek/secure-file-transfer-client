@@ -6,6 +6,7 @@ import com.bsk.Models.EncryptedContentPackage;
 import com.bsk.Services.ContentEncryptService;
 import javafx.scene.control.TextArea;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,6 +31,8 @@ public class KeyExchangeController {
     private final ContentEncryptService contentEncryptService;
     public TextArea readArea;
     private byte[] decryptedSessionKey;
+    @Value("${outputDirectory}")
+    private String outputDirectory;
 
     @GetMapping("/publicKey")
     public byte[] getPublicKey() {  //TODO decrypt RSA public key file
@@ -58,10 +63,26 @@ public class KeyExchangeController {
     public void saveEncryptedContent(@RequestBody @Valid EncryptedContentPackage encryptedContentPackage) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         String decrypted = contentEncryptService.decryptFile(decryptedSessionKey, encryptedContentPackage);
         System.out.println("got it!");
-        System.out.println(decrypted);
-        if (encryptedContentPackage.getType().equals("text")) {
+        if (encryptedContentPackage.getType()
+                                   .equals("text")) {
             readArea.setText(decrypted);
+        } else {
+            System.out.println(decrypted);
+            saveToFile(encryptedContentPackage, decrypted);
         }
+    }
+
+    private void saveToFile(EncryptedContentPackage encryptedContentPackage, String message) {
+        try {
+            File fileToSave = new File(outputDirectory + encryptedContentPackage.getType());
+            fileToSave.createNewFile();
+            FileWriter writer = new FileWriter(fileToSave);
+            writer.write(message);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("File already exists");
+        }
+
     }
 
 }
