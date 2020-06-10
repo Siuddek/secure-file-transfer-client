@@ -1,8 +1,8 @@
 package com.bsk.Controllers;
 
 import com.bsk.Configurations.KeyManagerConfiguration;
+import com.bsk.Models.PasswordDialog;
 import javafx.application.Platform;
-import javafx.scene.control.TextInputDialog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -21,10 +21,11 @@ public class UserPasswordController {
     public void askForPassword() {
         if (doesPrivateKeyExist()) {
             Platform.runLater(() -> {
-                TextInputDialog textInputDialog = new TextInputDialog();
+                PasswordDialog textInputDialog = new PasswordDialog();
                 textInputDialog.setHeaderText("Enter private key password");
                 Optional<String> password = textInputDialog.showAndWait();
                 keyManagerConfiguration.setPassword(password.get());
+                System.out.println(password.get());
             });
         }
     }

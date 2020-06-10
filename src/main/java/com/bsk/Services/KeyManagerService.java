@@ -29,8 +29,8 @@ public class KeyManagerService {
             (byte) 0x5b, (byte) 0xd7, (byte) 0x45, (byte) 0x17
     };
 
-    public void createRsaKeyPair(String password) throws NoSuchAlgorithmException, IOException {
-        String pass = getEncryptedPassword(password); //TODO encode key files with user password
+    public void createRsaKeyPair(String password) throws NoSuchAlgorithmException {
+        String pass = getEncryptedPassword(password);
         savePassword(pass);
         KeyPair keyPair = generateKeyPair();
         Key publicKey = keyPair.getPublic();
@@ -42,7 +42,7 @@ public class KeyManagerService {
             saveEncryptedPrivateKey(privateKey);
             showSuccessDialog();
         } catch (Exception e) {
-            e.printStackTrace(); //TODO handling
+            e.printStackTrace();
         }
     }
 

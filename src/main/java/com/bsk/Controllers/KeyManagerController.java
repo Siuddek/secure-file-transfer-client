@@ -28,7 +28,7 @@ public class KeyManagerController {
         }
         try {
             keyManagerService.createRsaKeyPair(sendPasswordButton.getText());
-        } catch (NoSuchAlgorithmException | IOException e) {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace(); //TODO handle by javafx alter
         }
 
